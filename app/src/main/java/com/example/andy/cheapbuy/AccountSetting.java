@@ -62,8 +62,6 @@ public class AccountSetting extends AppCompatActivity {
             public void done(ParseObject object, ParseException e) {
                 if (e == null) {
 
-
-
                     if (object.has("selfieimage")) {
                         ImageView profileImage = (ImageView)findViewById(R.id.personalInfoImage);
                         ParseFile image = object.getParseFile("selfieimage");

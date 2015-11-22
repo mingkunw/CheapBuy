@@ -20,6 +20,7 @@ import android.widget.ArrayAdapter;
 import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.ListAdapter;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.parse.FindCallback;
@@ -51,32 +52,34 @@ public class SellInterface extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_sell_interface);
 
+
+
         adapter = new SellItemImageAdapter(getLayoutInflater(), this, R.layout.sell_interface_unit, image_url);
 
         refreshContent();
 
-        mGrid = (GridView) findViewById(R.id.sell_item_grid);
-        mGrid.setAdapter(adapter);
-        mGrid.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-            }
-        });
-        final int endTrigger = 2;
-        mGrid.setOnScrollListener(new AbsListView.OnScrollListener() {
-            @Override
-            public void onScrollStateChanged(AbsListView view, int scrollState) {
-
-            }
-
-            @Override
-            public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
-                if (mGrid.getCount() != 0
-                        && mGrid.getLastVisiblePosition() >= (mGrid.getCount() - 1) - endTrigger) {
-                    loadMore();
-                }
-            }
-        });
+        //mGrid = (GridView) findViewById(R.id.sell_item_grid);
+       // mGrid.setAdapter(adapter);
+//        mGrid.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+//            @Override
+//            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+//            }
+//        });
+//        final int endTrigger = 2;
+//        mGrid.setOnScrollListener(new AbsListView.OnScrollListener() {
+//            @Override
+//            public void onScrollStateChanged(AbsListView view, int scrollState) {
+//
+//            }
+//
+//            @Override
+//            public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
+//                if (mGrid.getCount() != 0
+//                        && mGrid.getLastVisiblePosition() >= (mGrid.getCount() - 1) - endTrigger) {
+//                    loadMore();
+//                }
+//            }
+//        });
 
         final SwipeRefreshLayout mSwipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.swipe_layout);
         mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
@@ -88,6 +91,13 @@ public class SellInterface extends AppCompatActivity {
 
 
         });
+
+    }
+
+    private void renderImage() {
+        RelativeLayout sellLayout = (RelativeLayout) findViewById(R.id.sellInterface);
+
+        ImageView leftDown, rightDown;
 
 
     }
@@ -111,7 +121,7 @@ public class SellInterface extends AppCompatActivity {
                                 Bitmap bitmap = BitmapFactory.decodeByteArray(imageData, 0, imageData.length);
                                 images.add(bitmap);
                                 image_url.add("");
-                                adapter.notifyDataSetChanged();
+                                //adapter.notifyDataSetChanged();
                             } catch (ParseException e1) {
                                 e1.printStackTrace();
                             }
@@ -142,7 +152,7 @@ public class SellInterface extends AppCompatActivity {
                                 Bitmap bitmap = BitmapFactory.decodeByteArray(imageData, 0, imageData.length);
                                 images.add(bitmap);
                                 image_url.add("");
-                                adapter.notifyDataSetChanged();
+                                //adapter.notifyDataSetChanged();
                             } catch (ParseException e1) {
                                 e1.printStackTrace();
                             }
