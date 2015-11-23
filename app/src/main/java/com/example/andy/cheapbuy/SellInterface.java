@@ -16,6 +16,7 @@ import android.view.Display;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewTreeObserver;
 import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -97,6 +98,10 @@ public class SellInterface extends AppCompatActivity {
 
     }
 
+    int leftHeight = 0;
+    int rightHeight = 0;
+    boolean isLeft = false;
+
     private void renderImage() {
         RelativeLayout sellLayout = (RelativeLayout) findViewById(R.id.sell_item_relative_view);
         sellLayout.removeAllViews();
@@ -109,15 +114,16 @@ public class SellInterface extends AppCompatActivity {
         Point size = new Point();
         display.getSize(size);
         int width = size.x;
-        int leftHeight = 0;
-        int rightHeight = 0;
-
+        leftHeight = 0;
+        rightHeight = 0;
+        //boolean isLeft = false;
+        //ImageView newIm;
         int i = 0;
         for (Bitmap image : images) {
-            ImageView newIm = new ImageView(this);
+            final ImageView newIm = new ImageView(this);
             RelativeLayout.LayoutParams relativeParams = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT,
                     RelativeLayout.LayoutParams.WRAP_CONTENT);
-            boolean isLeft = false;
+            isLeft = false;
             if (leftDown == null) {
                 relativeParams.addRule(RelativeLayout.ALIGN_PARENT_TOP);
                 relativeParams.addRule(RelativeLayout.ALIGN_PARENT_LEFT);
@@ -131,6 +137,8 @@ public class SellInterface extends AppCompatActivity {
                 isLeft = false;
             }
             else {
+                Log.d("LEFTHEIGHT", "" + leftHeight);
+                Log.d("RIGHTHEIGHT",""+rightHeight);
                 if (leftHeight > rightHeight) {
                     isLeft = false;
                     relativeParams.addRule(RelativeLayout.BELOW, rightDown.getId());
@@ -150,16 +158,35 @@ public class SellInterface extends AppCompatActivity {
             newIm.setAdjustViewBounds(true);
             newIm.setId(12345 + i);
             sellLayout.addView(newIm, relativeParams);
-            Log.d("HAHAH", "" +newIm.getMeasuredHeight());
-            if (isLeft) {
-                leftHeight += newIm.getMeasuredHeight();
-            }
-            else {
-                rightHeight += newIm.getMeasuredHeight();
-            }
+
+
+            Log.d("LEE", "" + isLeft);
+
+            ViewTreeObserver newImageHeight = newIm.getViewTreeObserver();
+            newImageHeight.addOnDrawListener(new ViewTreeObserver.OnDrawListener(){
+
+                public void onDraw() {
+
+                    if (isLeft) {
+                        leftHeight += newIm.getMeasuredHeight();
+                        Log.d("HAHAH", "" + newIm.getMeasuredHeight());
+                        Log.d("LEFTHEIGHT1",""+leftHeight);
+
+                    }
+                    else {
+                        rightHeight += newIm.getMeasuredHeight();
+                        //Log.d("RIGHTHEIGHT",""+rightHeight);
+                    }
+                    //return true;
+                }
+
+            });
+
             i++;
         }
     }
+
+
 
     private void refreshContent() {
         images.clear();
@@ -187,6 +214,7 @@ public class SellInterface extends AppCompatActivity {
                         }
                     }
 
+                    renderImage();
                     renderImage();
                 } else {
 

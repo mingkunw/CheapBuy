@@ -2,6 +2,7 @@ package com.example.andy.cheapbuy;
 
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
@@ -10,8 +11,10 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 
 import com.parse.GetCallback;
@@ -19,6 +22,7 @@ import com.parse.ParseException;
 import com.parse.ParseFile;
 import com.parse.ParseObject;
 import com.parse.ParseQuery;
+import com.parse.SaveCallback;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -31,14 +35,101 @@ public class PhotoShoot extends AppCompatActivity {
 
     private SellInfo sellinfo;
     private int TAKE_PHOTO = 1;
+    private String userId;
+    private Uri itemImageUri;
+
+    private String itemId;
+    private int photoNum = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         sellinfo = new SellInfo();
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_photo_shoot);
-        ImageView cameraButton = (ImageView)findViewById(R.id.cameraClick);
 
+        //ImageView cameraButton = (ImageView)findViewById(R.id.cameraClick);
+
+        if (savedInstanceState == null) {
+            Bundle extras = getIntent().getExtras();
+            if(extras == null) {
+                userId= null;
+            } else {
+                userId= extras.getString("userId");
+            }
+        } else {
+            userId= (String) savedInstanceState.getSerializable("userId");
+        }
+
+        if (savedInstanceState == null) {
+            Bundle extras = getIntent().getExtras();
+            if(extras == null) {
+                itemId= null;
+            } else {
+                itemId= extras.getString("itemId");
+            }
+        } else {
+            itemId= (String) savedInstanceState.getSerializable("itemId");
+        }
+
+        if (savedInstanceState == null) {
+            Bundle extras = getIntent().getExtras();
+            if(extras == null) {
+                photoNum= 0;
+            } else {
+                photoNum = extras.getInt("photoNum");
+            }
+        } else {
+            photoNum= (int) savedInstanceState.getSerializable("photoNum");
+        }
+
+        if(itemId != null){
+
+            ParseQuery<ParseObject> query = ParseQuery.getQuery("Item");
+            query.getInBackground(itemId, new GetCallback<ParseObject>() {
+                public void done(ParseObject object, ParseException e) {
+                    if (e == null) {
+                        if(object.has("itemImage0")){
+                            ImageButton imageButton1 = (ImageButton)findViewById(R.id.imagebutton1);
+                            ParseFile image = object.getParseFile("selfieimage");
+                            try {
+                                byte[] imageData = image.getData();
+                                Bitmap bitmap = BitmapFactory.decodeByteArray(imageData, 0, imageData.length);
+                                imageButton1.setImageBitmap(bitmap);
+                            } catch (ParseException e1) {
+                                e1.printStackTrace();
+                            }
+
+                        }
+                        if(object.has("itemImage1")){
+                            ImageButton imageButton2 = (ImageButton)findViewById(R.id.imagebutton2);
+                            ParseFile image = object.getParseFile("selfieimage");
+                            try {
+                                byte[] imageData = image.getData();
+                                Bitmap bitmap = BitmapFactory.decodeByteArray(imageData, 0, imageData.length);
+                                imageButton2.setImageBitmap(bitmap);
+                            } catch (ParseException e1) {
+                                e1.printStackTrace();
+                            }
+
+                        }
+                        if(object.has("itemImage2")){
+                            ImageButton imageButton3 = (ImageButton)findViewById(R.id.imagebutton3);
+                            ParseFile image = object.getParseFile("selfieimage");
+                            try {
+                                byte[] imageData = image.getData();
+                                Bitmap bitmap = BitmapFactory.decodeByteArray(imageData, 0, imageData.length);
+
+                                imageButton3.setImageBitmap(bitmap);
+                            } catch (ParseException e1) {
+                                e1.printStackTrace();
+                            }
+
+                        }
+                    }
+                }
+            });
+
+        }
 
 
     }
@@ -51,14 +142,14 @@ public class PhotoShoot extends AppCompatActivity {
 
     }
 
-    /*
+
 
     public void cameraClick(View view){
 
         Intent i = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-        File photo = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES),"selfie.jpg");
+        File photo = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES),"itemImage.jpg");
 
-        selfieUri = Uri.fromFile(photo);
+        itemImageUri = Uri.fromFile(photo);
 
         startActivityForResult(i, TAKE_PHOTO);
 
@@ -71,37 +162,68 @@ public class PhotoShoot extends AppCompatActivity {
         super.onActivityResult(requestCode, resultCode, data);
         Bundle bundle = data.getExtras();
         final Bitmap imageData = (Bitmap)bundle.get("data");
-        int width = imageData.getWidth();
-        int height = imageData.getHeight();
-        int crop;
-        final Bitmap imageAfterCrop;
-        if(width > height){
-            crop = (width-height)/2;
-            imageAfterCrop = Bitmap.createBitmap(imageData,crop,0,height,height);
-        }
-        else{
-            crop = (height-width)/2;
-            imageAfterCrop = Bitmap.createBitmap(imageData,0,crop,width,width);
-        }
-        ParseQuery<ParseObject> query = ParseQuery.getQuery("PersonInfo");
-        query.getInBackground(userId, new GetCallback<ParseObject>() {
-            public void done(ParseObject object, ParseException e) {
-                if (e == null) {
 
-                    ByteArrayOutputStream stream = new ByteArrayOutputStream();
-                    imageAfterCrop.compress(Bitmap.CompressFormat.PNG, 4, stream);
-                    byte[] byteArray = stream.toByteArray();
-                    ParseFile file = new ParseFile("selfie.png",byteArray);
-                    object.put("selfieimage", file);
-                    object.saveInBackground();
-                    Intent i = new Intent(AccountSetting.this,AccountSetting.class);
-                    i.putExtra("userId",userId);
-                    startActivity(i);
+        Log.d("PHOTONUM","is"+photoNum);
+        if(photoNum == 0){
+
+            photoNum++;
+            final ParseObject newItem = new ParseObject("Item");
+            ByteArrayOutputStream stream = new ByteArrayOutputStream();
+            imageData.compress(Bitmap.CompressFormat.PNG, 4, stream);
+            byte[] byteArray = stream.toByteArray();
+            ParseFile file = new ParseFile("itemImage0",byteArray);
+            newItem.put("itemImage0", file);
+            newItem.saveInBackground(new SaveCallback() {
+                @Override
+                public void done(ParseException e) {
+                    if (e == null) {
+                        Intent i = new Intent(PhotoShoot.this, PhotoShoot.class);
+                        itemId = newItem.getObjectId();
+
+                        i.putExtra("userId", userId);
+                        i.putExtra("itemId", itemId);
+                        i.putExtra("photoNum", photoNum);
+                        startActivity(i);
+                    } else {
+
+                    }
                 }
-            }
-        });
+            });
+
+        }
+        else if(photoNum == 1||photoNum == 2){
+            Log.d("itemID",itemId+"111111");
+            photoNum++;
+
+            ParseQuery<ParseObject> query = ParseQuery.getQuery("Item");
+            query.getInBackground(itemId, new GetCallback<ParseObject>() {
+                public void done(ParseObject object, ParseException e) {
+                    if (e == null) {
+
+
+                        ByteArrayOutputStream stream = new ByteArrayOutputStream();
+                        imageData.compress(Bitmap.CompressFormat.PNG, 4, stream);
+                        byte[] byteArray = stream.toByteArray();
+                        String name = "itemImage"+photoNum;
+
+                        ParseFile file = new ParseFile(name,byteArray);
+                        object.put(name, file);
+                        object.saveInBackground();
+
+                        Intent i = new Intent(PhotoShoot.this,PhotoShoot.class);
+                        i.putExtra("userId",userId);
+                        i.putExtra("itemId",itemId);
+                        i.putExtra("photoNum",photoNum);
+                        startActivity(i);
+                    }
+                }
+            });
+        }
+        else{}
+
+
 
 
     }
-*/
+
 }

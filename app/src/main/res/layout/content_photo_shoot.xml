@@ -14,11 +14,11 @@
         android:scaleType="fitXY"
         android:background="@android:color/transparent"
         android:contentDescription="@string/plus_sign"
-        android:layout_alignTop="@+id/frame_1"
-        android:layout_alignLeft="@+id/frame_1"
-        android:layout_alignStart="@+id/frame_1"
+        android:layout_above="@+id/frame_2"
+        android:layout_alignLeft="@+id/frame_2"
+        android:layout_alignStart="@+id/frame_2"
         android:layout_marginLeft="15dp"
-        android:layout_marginTop="23dp" />
+        android:layout_marginBottom="45dp" />
 
     <ImageButton
         android:layout_width="80dp"
@@ -36,24 +36,24 @@
         android:layout_width="80dp"
         android:layout_height="80dp"
         android:id="@+id/imagebutton2"
-        android:layout_alignTop="@+id/imagebutton1"
-        android:layout_toRightOf="@+id/imagebutton1"
-        android:layout_toEndOf="@+id/imagebutton1"
-        android:layout_marginLeft="20dp"
-        android:layout_marginStart="16dp"
+        android:layout_marginStart="110dp"
+        android:layout_alignTop="@+id/plusSign"
+        android:layout_toRightOf="@+id/plusSign"
+        android:layout_toEndOf="@+id/plusSign"
+        android:layout_marginTop="-15dp"
         android:contentDescription="@string/imagebutton2"
-        android:layout_marginTop="0dp" />
+         />
 
     <ImageButton
         android:layout_width="80dp"
         android:layout_height="80dp"
         android:id="@+id/imagebutton3"
-        android:layout_alignTop="@+id/imagebutton2"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentEnd="true"
-        android:layout_marginRight="20dp"
-        android:contentDescription="@string/imagebutton3"
-        android:layout_marginTop="0dp" />
+        android:layout_marginStart="200dp"
+        android:layout_alignTop="@+id/plusSign"
+        android:layout_toRightOf="@+id/plusSign"
+        android:layout_toEndOf="@+id/plusSign"
+        android:layout_marginTop="-15dp"
+        android:contentDescription="@string/imagebutton3" />
 
     <ImageView
         android:layout_width="360dp"
@@ -62,7 +62,9 @@
         android:src="@drawable/frame_1"
         android:contentDescription="@string/frame_1"
         android:layout_above="@+id/frame_2"
-        android:layout_centerHorizontal="true" />
+        android:layout_alignLeft="@+id/frame_2"
+        android:layout_alignStart="@+id/frame_2"
+        android:layout_marginBottom="20dp" />
 
     <ImageView
         android:layout_width="360dp"
@@ -71,8 +73,7 @@
         android:src="@drawable/frame_2"
         android:contentDescription="@string/frame_2"
         android:layout_centerVertical="true"
-        android:layout_alignLeft="@+id/frame_1"
-        android:layout_alignStart="@+id/frame_1" />
+        android:layout_centerHorizontal="true" />
 
     <EditText
         android:layout_width="wrap_content"
@@ -155,7 +156,8 @@
         android:layout_below="@+id/imageView"
         android:layout_toLeftOf="@+id/priceInput"
         android:layout_toStartOf="@+id/priceInput"
-        android:layout_marginTop="25dp" />
+        android:layout_marginTop="25dp"
+        android:onClick="cameraClick" />
 
     <ImageView
         android:layout_width="50dp"
