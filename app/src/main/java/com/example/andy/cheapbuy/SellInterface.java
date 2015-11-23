@@ -3,6 +3,7 @@ package com.example.andy.cheapbuy;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Point;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.design.widget.FloatingActionButton;
@@ -11,6 +12,7 @@ import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.Display;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -45,6 +47,7 @@ public class SellInterface extends AppCompatActivity {
     GridView mGrid;
     SellItemImageAdapter adapter;
     ArrayList<String> image_url = new ArrayList<String>();
+    ArrayList<ImageView> imageViews = new ArrayList<ImageView>();
     ArrayList<Bitmap> images = new ArrayList<Bitmap>();
 
     @Override
@@ -95,11 +98,67 @@ public class SellInterface extends AppCompatActivity {
     }
 
     private void renderImage() {
-        RelativeLayout sellLayout = (RelativeLayout) findViewById(R.id.sellInterface);
+        RelativeLayout sellLayout = (RelativeLayout) findViewById(R.id.sell_item_relative_view);
+        sellLayout.removeAllViews();
 
-        ImageView leftDown, rightDown;
+        ImageView leftDown = null, rightDown = null;
 
+        imageViews.clear();
 
+        Display display = getWindowManager().getDefaultDisplay();
+        Point size = new Point();
+        display.getSize(size);
+        int width = size.x;
+        int leftHeight = 0;
+        int rightHeight = 0;
+
+        int i = 0;
+        for (Bitmap image : images) {
+            ImageView newIm = new ImageView(this);
+            RelativeLayout.LayoutParams relativeParams = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT,
+                    RelativeLayout.LayoutParams.WRAP_CONTENT);
+            boolean isLeft = false;
+            if (leftDown == null) {
+                relativeParams.addRule(RelativeLayout.ALIGN_PARENT_TOP);
+                relativeParams.addRule(RelativeLayout.ALIGN_PARENT_LEFT);
+                leftDown = newIm;
+                isLeft = true;
+            }
+            else if (rightDown == null) {
+                relativeParams.addRule(RelativeLayout.ALIGN_PARENT_TOP);
+                relativeParams.addRule(RelativeLayout.ALIGN_PARENT_RIGHT);
+                rightDown = newIm;
+                isLeft = false;
+            }
+            else {
+                if (leftHeight > rightHeight) {
+                    isLeft = false;
+                    relativeParams.addRule(RelativeLayout.BELOW, rightDown.getId());
+                    relativeParams.addRule(RelativeLayout.ALIGN_PARENT_RIGHT);
+                    rightDown = newIm;
+                }
+                else {
+                    isLeft = true;
+                    relativeParams.addRule(RelativeLayout.BELOW, leftDown.getId());
+                    relativeParams.addRule(RelativeLayout.ALIGN_PARENT_LEFT);
+                    leftDown = newIm;
+                }
+            }
+            relativeParams.width = width/2;
+            newIm.setImageBitmap(image);
+            newIm.setScaleType(ImageView.ScaleType.FIT_CENTER);
+            newIm.setAdjustViewBounds(true);
+            newIm.setId(12345 + i);
+            sellLayout.addView(newIm, relativeParams);
+            Log.d("HAHAH", "" +newIm.getMeasuredHeight());
+            if (isLeft) {
+                leftHeight += newIm.getMeasuredHeight();
+            }
+            else {
+                rightHeight += newIm.getMeasuredHeight();
+            }
+            i++;
+        }
     }
 
     private void refreshContent() {
@@ -127,6 +186,8 @@ public class SellInterface extends AppCompatActivity {
                             }
                         }
                     }
+
+                    renderImage();
                 } else {
 
                 }
