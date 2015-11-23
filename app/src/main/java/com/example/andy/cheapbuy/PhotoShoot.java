@@ -14,6 +14,7 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 
@@ -90,10 +91,11 @@ public class PhotoShoot extends AppCompatActivity {
                     if (e == null) {
                         if(object.has("itemImage0")){
                             ImageButton imageButton1 = (ImageButton)findViewById(R.id.imagebutton1);
-                            ParseFile image = object.getParseFile("selfieimage");
+                            ParseFile image = object.getParseFile("itemImage0");
                             try {
                                 byte[] imageData = image.getData();
                                 Bitmap bitmap = BitmapFactory.decodeByteArray(imageData, 0, imageData.length);
+                                imageButton1.setBackgroundColor(-1);
                                 imageButton1.setImageBitmap(bitmap);
                             } catch (ParseException e1) {
                                 e1.printStackTrace();
@@ -102,10 +104,11 @@ public class PhotoShoot extends AppCompatActivity {
                         }
                         if(object.has("itemImage1")){
                             ImageButton imageButton2 = (ImageButton)findViewById(R.id.imagebutton2);
-                            ParseFile image = object.getParseFile("selfieimage");
+                            ParseFile image = object.getParseFile("itemImage1");
                             try {
                                 byte[] imageData = image.getData();
                                 Bitmap bitmap = BitmapFactory.decodeByteArray(imageData, 0, imageData.length);
+                                imageButton2.setBackgroundColor(-1);
                                 imageButton2.setImageBitmap(bitmap);
                             } catch (ParseException e1) {
                                 e1.printStackTrace();
@@ -114,11 +117,11 @@ public class PhotoShoot extends AppCompatActivity {
                         }
                         if(object.has("itemImage2")){
                             ImageButton imageButton3 = (ImageButton)findViewById(R.id.imagebutton3);
-                            ParseFile image = object.getParseFile("selfieimage");
+                            ParseFile image = object.getParseFile("itemImage2");
                             try {
                                 byte[] imageData = image.getData();
                                 Bitmap bitmap = BitmapFactory.decodeByteArray(imageData, 0, imageData.length);
-
+                                imageButton3.setBackgroundColor(-1);
                                 imageButton3.setImageBitmap(bitmap);
                             } catch (ParseException e1) {
                                 e1.printStackTrace();
@@ -136,7 +139,23 @@ public class PhotoShoot extends AppCompatActivity {
 
     public void backToMain(View v){
 
-
+        if(itemId == null)return;
+        Log.d("nani",itemId);
+        final EditText descriptionText = (EditText)findViewById(R.id.descriptionInput);
+        final EditText priceText = (EditText)findViewById(R.id.priceInput);
+        ParseQuery<ParseObject> query = ParseQuery.getQuery("Item");
+        query.getInBackground(itemId, new GetCallback<ParseObject>() {
+            public void done(ParseObject object, ParseException e) {
+                if (e == null) {
+                    Log.d("Description", descriptionText.getText().toString());
+                    Log.d("Price", priceText.getText().toString());
+                    object.put("Description",descriptionText.getText().toString());
+                    object.put("Price",Integer.parseInt(priceText.getText().toString()));
+                    //object.put("UserId",userId);
+                    object.saveInBackground();
+                }
+            }
+        });
         Intent i = new Intent(PhotoShoot.this, SellInterface.class);
         startActivity(i);
 
@@ -193,7 +212,7 @@ public class PhotoShoot extends AppCompatActivity {
         }
         else if(photoNum == 1||photoNum == 2){
             Log.d("itemID",itemId+"111111");
-            photoNum++;
+
 
             ParseQuery<ParseObject> query = ParseQuery.getQuery("Item");
             query.getInBackground(itemId, new GetCallback<ParseObject>() {
@@ -206,6 +225,7 @@ public class PhotoShoot extends AppCompatActivity {
                         byte[] byteArray = stream.toByteArray();
                         String name = "itemImage"+photoNum;
 
+                        photoNum++;
                         ParseFile file = new ParseFile(name,byteArray);
                         object.put(name, file);
                         object.saveInBackground();

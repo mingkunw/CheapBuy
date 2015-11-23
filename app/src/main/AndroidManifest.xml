@@ -6,6 +6,7 @@
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
 
     <uses-feature android:name="android.hardware.camera" />
+
     <uses-permission android:name="android.permission.CAMERA" />
 
     <application
@@ -29,7 +30,6 @@
             android:name=".PasswordInput"
             android:label="@string/title_activity_password_input"
             android:theme="@style/AppTheme.NoActionBar" >
-
         </activity>
         <activity
             android:name=".chat_view"
@@ -47,6 +47,7 @@
             android:theme="@style/AppTheme.NoActionBar" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
@@ -68,6 +69,16 @@
         <activity
             android:name=".SignUpInterface"
             android:label="@string/title_activity_sign_up_interface"
+            android:theme="@style/AppTheme.NoActionBar" >
+        </activity>
+        <activity
+            android:name=".ItemDisplay"
+            android:label="@string/title_activity_item_display"
+            android:theme="@style/AppTheme.NoActionBar" >
+        </activity>
+        <activity
+            android:name=".DiscussionAndBuy"
+            android:label="@string/title_activity_discussion_and_buy"
             android:theme="@style/AppTheme.NoActionBar" >
         </activity>
     </application>
