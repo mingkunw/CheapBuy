@@ -30,6 +30,11 @@
             android:name=".PasswordInput"
             android:label="@string/title_activity_password_input"
             android:theme="@style/AppTheme.NoActionBar" >
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
         </activity>
         <activity
             android:name=".chat_view"
@@ -45,16 +50,12 @@
             android:name=".SellInterface"
             android:label="@string/title_activity_sell_interface"
             android:theme="@style/AppTheme.NoActionBar" >
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
         </activity>
         <activity
             android:name=".AccountSetting"
             android:label="@string/title_activity_account_setting"
             android:theme="@style/AppTheme.NoActionBar" >
+
         </activity>
         <activity
             android:name=".NameSetting"

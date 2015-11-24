@@ -89,7 +89,7 @@ public class AccountSetting extends AppCompatActivity {
 
         selfieUri = Uri.fromFile(photo);
 
-        //i.putExtra(MediaStore.EXTRA_OUTPUT,selfieUri);
+
 
         startActivityForResult(i, TAKE_PHOTO);
 

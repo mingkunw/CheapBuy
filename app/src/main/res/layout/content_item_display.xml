@@ -29,7 +29,7 @@
         android:layout_marginTop="23dp" />
 
     <ScrollView
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:id="@+id/scrollView"
         android:layout_below="@+id/imageView10"
@@ -52,7 +52,6 @@
                 android:layout_height="wrap_content"
                 android:text="@string/moreimageButton"
                 android:layout_below="@+id/imageDisplay"
-
                 android:id="@+id/moreImageButton"
                 android:clickable="true"
                 android:onClick="moreImageFunction" />
@@ -62,7 +61,6 @@
                 android:layout_height="wrap_content"
                 android:text="@string/buyitButton"
                 android:layout_toRightOf="@id/moreImageButton"
-
                 android:id="@+id/buyItButton"
                 android:onClick="buyItFunction"
                 android:clickable="true"

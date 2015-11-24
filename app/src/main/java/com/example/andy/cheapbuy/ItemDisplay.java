@@ -33,10 +33,10 @@ public class ItemDisplay extends AppCompatActivity {
             if(extras == null) {
                 itemId= null;
             } else {
-                itemId= extras.getString("userId");
+                itemId= extras.getString("itemId");
             }
         } else {
-            itemId= (String) savedInstanceState.getSerializable("userId");
+            itemId= (String) savedInstanceState.getSerializable("itemId");
         }
 
         if (savedInstanceState == null) {
